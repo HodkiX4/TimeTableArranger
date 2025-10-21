@@ -73,60 +73,54 @@ window.document.addEventListener("DOMContentLoaded", () => {
 
     let dragElement = null;
 
-    for(let row of timeTableBody.children) {
-        for(let data of row.children) {
-            data.addEventListener("dragover", (e) => {
-                e.preventDefault();
-            });
+    timeTableBody.addEventListener("dragstart", (e) => {
+        dragElement = e.target.closest("td");
+    });
 
-            data.addEventListener("drop", (e) => {
-                if(e.target.innerText === "") {
-                    e.target.innerText = dragElement.innerText;
-                    if(dragElement.hasAttribute("isDeletable")) {
-                        const dragElementParent = dragElement.parentElement;
-                        subjectTableBody.removeChild(dragElementParent);
-                        
-                    } else {
-                        dragElement.innerText = "";
-                    }
-                } else {
-                    // TODO -> Modal pop up needed for implementing user choice
-                    let swapperElement = dragElement.innerText;
-                    dragElement.innerText = e.target.innerText;
-                    e.target.innerText = swapperElement;
-                }
+    timeTableBody.addEventListener("dragover", (e) => {
+        e.preventDefault();
+    });
 
-                dragElement.removeAttribute("isDeletable");
-            });
-
-            data.addEventListener("dragstart", (e) => {
-                dragElement = e.currentTarget;
-            }) ;
-        }
-    }
-
-    for(let row of subjectTableBody.children) {
-        const data = row.firstElementChild;               
-        data.addEventListener("dragstart", (e) => {
-            dragElement = e.currentTarget;
-        });
-        data.addEventListener("dragover", (e) => {
-            e.preventDefault();
-            console.log("macska");
-            
-        });
-        data.addEventListener("drop", (e) => {
-            e.preventDefault();
-
-            const tableRow = document.createElement('tr');
-            const tableData = document.createElement('td');
-            tableData.draggable = true;
+    timeTableBody.addEventListener("drop", (e) => {
+        const tableData = e.target.closest("td");
+        if(tableData.innerText === "") {
             tableData.innerText = dragElement.innerText;
-            tableRow.appendChild(tableData)
-            subjectTableBody.appendChild(tableRow);
-            if(!dragElement.hasAttribute("isDeletable")) {
+            if(dragElement.hasAttribute("isDeletable")) {
+                const dragElementParent = dragElement.parentElement;
+                subjectTableBody.removeChild(dragElementParent);
+            } else {
                 dragElement.innerText = "";
             }
-        });
-    }
+        } else {
+                let swapperElement = dragElement.innerText;
+                dragElement.innerText = e.target.innerText;
+                tableData.innerText = swapperElement;
+        }
+    });
+
+    subjectTableBody.addEventListener("dragstart", (e) => {
+        const tableData = e.target.closest("td");
+        if(!tableData) return;
+        dragElement = tableData;
+    });
+
+    subjectTableBody.addEventListener("dragover", (e) => {
+        e.preventDefault();
+    });
+
+    subjectTableBody.addEventListener("drop", (e) => {
+        e.preventDefault();
+
+        const tableRow = document.createElement("tr");
+        const tableData = document.createElement("td");
+        tableData.draggable = true;
+        tableData.setAttribute("isDeletable", "true");
+        tableData.innerText = dragElement.innerText;
+        tableRow.appendChild(tableData);
+        subjectTableBody.appendChild(tableRow);
+
+        if(!dragElement.hasAttribute("isDeletable")) {
+            dragElement.innerText = "";
+        }
+    });
 });
