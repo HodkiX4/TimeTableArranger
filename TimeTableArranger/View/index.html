@@ -5,53 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Table</title>
     <link rel="stylesheet" href="../Styles/styles.css">
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    </head>
-<body>
-    <div class="container-fluid">
-        <header class="row text-center py-4">
-            <div class="col">
-                <h1>Órarend tervező</h1>
-            </div>
-        </header>
-        <main class="container-fluid">
-          <div class="row g-3" style="height: calc(100vh - 120px);">
-            <!-- Bal oldali tárgylista -->
-            <div class="col-12 col-md-2">
-              <table id="subjects-table" class="table table-bordered text-center align-top">
-                <thead class="table-primary">
-                    <tr>
-                        <th>Tantárgyak</th>
-                    </tr>
-                </thead>
-                <tbody id="subjects-body">
-                  <!-- JS tölti fel -->
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Jobb oldali órarend -->
-            <div class="col-12 col-md-10">
-              <div class="table-responsive h-100">
-                <table
-                  id="time-table"
-                  class="table table-bordered text-center align-top table-fixed"
-                >
-                  <thead class="table-primary">
-                    <tr id="table-head">
-                      <!-- JS tölti fel -->
-                    </tr>
-                  </thead>
-                  <tbody id="table-body">
-                    <!-- JS tölti fel -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Órarend tervező</h1>
+      </header>
+        <main>
+          <div class="table-actions">
+            <!-- Save timetable form -->
+            <form id="save-form">
+              <input type="text" name="name" autocomplete="off" placeholder="Type in table name">
+              <button type="submit">Mentés</button>
+            </form>
+            
+            <!-- Select saved tables -->
+            <form id="get-form">
+              <select name="table" id="table-select">
+                <!-- Filled up by JS -->
+              </select>
+              <button type="submit">Kiválasztás</button>
+            </form>
+            
+            <!-- Delete saved table -->
+            <button id="delete-btn">Delete</button>
           </div>
-        </main>
-      </div>
-    <script type="module" src="../JavaScript/index.js"></script>
+
+            <!-- Subject table -->
+          <table id="subjects-table">
+            <thead>
+              <tr>
+                <th>Tantárgyak</th>
+              </tr>
+            </thead>
+            <tbody id="subjects-body">
+                  <!-- Filled up by JS -->
+            </tbody>
+          </table>
+
+          <!-- Time table -->
+            <table id="time-table" >
+              <thead class="table-primary">
+                <tr id="table-head">
+                  <!-- Filled up by JS -->
+                </tr>
+              </thead>
+              <tbody id="table-body">
+                <!-- Filled up by JS -->
+              </tbody>
+            </table>
+          </main>
+        </div>
+
+
+      <script type="module" src="../JavaScript/index.js"></script>
 </body>
 </html>

@@ -1,8 +1,8 @@
 export const subjects = [
     "Alkalmazásfejlesztés II.",
-    "Mesterséges Inteligencia I",
+    "Mesterséges Inteligencia I.",
     "Szoftvertesztelés",
-    "Progresszív Webalkalmazás fejlesztés",
+    "Progresszív Webalkalmazás fejlesztés"
 ];
 
 export const weekDays = [

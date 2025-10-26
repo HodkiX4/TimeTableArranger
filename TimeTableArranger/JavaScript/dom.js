@@ -2,60 +2,164 @@ import { subjects, weekDays } from "./dummyData.js";
 
 // Creates the head of the timetable
 function createTableHead(head) {
-    const headerRow = document.createElement('tr');
+    // Creates a row element.
+    const row = document.createElement('tr');
+
+    // Creates a cell element and sets its properties.
+    const cell = document.createElement("th");
+    cell.innerText = "Idő";
     
-    headerRow.innerHTML = "<th style='width: 2rem;'>Idő</th>";
-    head.appendChild(headerRow);
-    weekDays.map(d => {
-        headerRow
-        .innerHTML += `
-            <th style='width: 20%'>${d}</th>
-            `
-    })
+    // Appends the cell to the row element.
+    row.appendChild(cell);
+    
+    // Iterates through the weekdays and appends them to the row.
+    weekDays.map(day => {
+        const cell = document.createElement("th");
+        cell.innerText = day;
+        row.appendChild(cell);
+    });
+    
+    // Appends the row to the table head element.
+    head.appendChild(row);
+
 }
 
-// Creates the body of the timetable
+// Creates the body of the timetable.
 function createTableBody(body) {
     // This for loop creates the table rows from 8 to 16 O'clock 
     for(let i = 8; i <= 16; i++) {
-        const tableRow = document.createElement('tr');
-        // This for loop feels each row with a "td" tag for each day we have in the timetable.
+
+        // Creates a row element.
+        const row = document.createElement('tr');
+        // This for loop fills each row with a cell for each day we have in the timetable.
         for(let j = 0; j <= weekDays.length; j++) {
-            const tableData = document.createElement('td');
+            // Creates a cell element.
+            const cell = document.createElement('td');
+            
+            // If cell has the index 0, then it will contain the time, else it will be empty and is set to be draggable. 
             if(j === 0) {
-                tableData.textContent = `${i}:00`;
-                tableData.classList.add("align-top");
+                cell.innerText = `${i}:00`;
+                cell.setAttribute("time-field", "true");
             } else {
-                tableData.draggable = true;
+                cell.draggable = true;
             }
-            tableRow.appendChild(tableData);
+            row.appendChild(cell);
                 
         }
-        body.appendChild(tableRow);
+
+        // Appends the row to the table body element.
+        body.appendChild(row);
     }
 }
 
-// Creates the content of the timetable
+// Creates the content of the timetable.
 function createTimeTable(table) {
-    const tableHead = table.firstElementChild;
-    const tableBody = table.lastElementChild;
-    createTableHead(tableHead);
-    createTableBody(tableBody);
+    // We get the child elements of the table and load the matching data for them.
+    const head = table.firstElementChild;
+    const body = table.lastElementChild;
+    createTableHead(head);
+    createTableBody(body);
  
 }
 
-// Fills and unordered list with list items containing subjects.
+// Creates the content of the timetable.
 function createSubjectTable(table) {
-    const tableBody = table.lastElementChild;
-    subjects.map((s, i) => {
-        const tableRow = document.createElement('tr');
-        const tableData = document.createElement('td');
-        tableData.setAttribute("isDeletable", "true");
-        tableData.textContent = s;
-        tableData.draggable = true;
-        tableRow.appendChild(tableData);
-        tableBody.appendChild(tableRow)
+    // Gets the body of the subject table.
+    const body = table.lastElementChild;
+
+    // Iterates through the subjects array and creates a row and cell for each subject.
+    subjects.map((subject) => {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.setAttribute("isDeletable", "true");
+        cell.textContent = subject;
+        cell.draggable = true;
+        row.appendChild(cell);
+        body.appendChild(row);
     });
 }
 
-export { createTimeTable, createSubjectTable }
+function loadSubjectTable(subjectTableBody, subjectTableArray) {
+    // Removes the current rows from the subject table.
+    while(subjectTableBody.firstElementChild) {
+        subjectTableBody.removeChild(subjectTableBody.lastElementChild);
+    }
+
+
+    if(!subjects.includes(subjectTableArray[0])) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        row.setAttribute("place-holder", "true");
+        cell.colSpan = 1;
+        cell.innerText = "Húzd ide a tárgyat";
+        cell.style.textAlign = "center";
+        cell.style.color = "#888";
+        row.appendChild(cell);
+        subjectTableBody.appendChild(row);
+    } else {
+        for(let i = 0; i < subjectTableArray.length; i++) {
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+            
+            cell.innerText = subjectTableArray[i];
+            cell.draggable = true;
+            cell.setAttribute("isDeletable", "true");
+            row.appendChild(cell);
+            subjectTableBody.appendChild(row);
+        }
+    }
+}
+
+function loadTimeTable(timeTableBody, timeTableArray) {
+    while(timeTableBody.firstElementChild) {
+        timeTableBody.removeChild(timeTableBody.lastElementChild);
+    }
+
+    for(let i = 0; i < timeTableArray.length; i++) {
+        const row = document.createElement("tr");
+        for(let j = 0; j < timeTableArray[i].length; j++) {
+            const cell = document.createElement("td");
+            cell.innerText = timeTableArray[i][j];
+            if(j === 0) {
+                cell.setAttribute("time-field", "true");
+            } else {
+                cell.draggable = true;
+            }
+            row.appendChild(cell);
+        }
+        timeTableBody.appendChild(row);
+    }
+}
+
+function addSubjectTablePlaceholder(subjectTableBody) {
+    console.log(subjectTableBody);
+    if (subjectTableBody.children.length === 0) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        row.setAttribute("place-holder", "true");
+        cell.colSpan = 1;
+        cell.innerText = "Húzd ide a tárgyat";
+        cell.style.textAlign = "center";
+        cell.style.color = "#888";
+        row.appendChild(cell);
+        subjectTableBody.appendChild(row);
+    }
+}
+
+function removeSubjectTablePlaceholder(subjectTableBody) {
+    if(subjectTableBody.children.length == 2 && subjectTableBody.firstElementChild.hasAttribute("place-holder"))
+        subjectTableBody.removeChild(subjectTableBody.firstElementChild);
+}
+
+function showNotification() {
+
+}
+
+export {
+    createTimeTable,
+    createSubjectTable,
+    loadSubjectTable,
+    loadTimeTable,
+    addSubjectTablePlaceholder,
+    removeSubjectTablePlaceholder
+}
