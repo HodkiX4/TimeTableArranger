@@ -1,4 +1,4 @@
-import { addSubjectTablePlaceholder, removeSubjectTablePlaceholder } from "./dom.js";
+import { addSubjectTablePlaceholder, removeSubjectTablePlaceholder } from "../dom.js";
 
 // The element we are currently dragging with our mouse.
 let dragElement = null;
@@ -16,16 +16,25 @@ function dragOverEvent(e) {
 
 // Selects the drag element on drag start.
 function timeTableDragStartEvent(e) {
-    dragElement = e.target.closest("td");
+    const cell = e.target.closest("td");
+
+    // Makes it so you can't drag an empty cell.
+    if(!cell || cell.innerText === "") {
+        e.preventDefault();
+        return;
+    }
+
+    dragElement = cell;
 }
+
 
 
 function timeTableDropEvent(e) {
     // Selects the closest cell to the mouse on drag start.
     const cell = e.target.closest("td");
     
-    // Makes it so we can't replace fields containing time data.
-    if(cell.hasAttribute("time-field")) {
+    // Makes it so we can't replace fields containing time data or replace the cell with its self.
+    if(cell.hasAttribute("time-field") || cell === dragElement) {
         return;
     }
     // If its empty then it sets it to the inner text of the cell, otherwise it swaps the content of the cells.
@@ -40,11 +49,15 @@ function timeTableDropEvent(e) {
         } else {
             dragElement.innerText = "";
         }
+        window.alert(`A ${cell.innerText} órát sikeresen elhelyezted`);
     } else {
+            // A variable that is used to help swap the value of two table cells. 
             let swapperElement = dragElement.innerText;
             
+            // Returns a boolean based on out answer
             const confirmSwap = window.confirm(`Cserélni szeretnéd a ${dragElement.innerText} és ${cell.innerText} óra időpontját?`)
             
+            // If we click yes it swaps the two table cells otherwise it returns from the function.
             if(confirmSwap) {
                 dragElement.innerText = cell.innerText;
                 cell.innerText = swapperElement;
@@ -52,8 +65,8 @@ function timeTableDropEvent(e) {
                 return;
             }
     }
-    window.alert(`A ${cell.innerText} órát sikeresen elhelyezted`);
     
+    // Without it, if the subjects table is empty you can't pull back subjects anymore.
     addSubjectTablePlaceholder(subjectTableBody);
 }
 
@@ -68,7 +81,7 @@ function subjectTableDropEvent(e) {
     e.preventDefault();
 
     // If it comes from the subject table, we return, otherwise it would duplicate. 
-    if (dragElement && dragElement.closest("tbody") === subjectTableBody) {
+    if (dragElement && (dragElement.closest("tbody") === subjectTableBody)) {
         return;
     }
     const row = document.createElement("tr");
@@ -86,7 +99,7 @@ function subjectTableDropEvent(e) {
     removeSubjectTablePlaceholder(subjectTableBody);
 }
 
-export function initEventListeners(ttB, stB) {
+export function initTableEvents(ttB, stB) {
     timeTableBody = ttB;
     subjectTableBody = stB;
     
@@ -97,7 +110,7 @@ export function initEventListeners(ttB, stB) {
     subjectTableBody.addEventListener("dragstart", subjectTableDragStartEvent);
     subjectTableBody.addEventListener("dragover", dragOverEvent);
     subjectTableBody.addEventListener("drop", subjectTableDropEvent);
-
+    
     timeTableBody.addEventListener("dragstart", timeTableDragStartEvent);
     timeTableBody.addEventListener("dragover", dragOverEvent);
     timeTableBody.addEventListener("drop", timeTableDropEvent);

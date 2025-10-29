@@ -85,15 +85,19 @@ function loadSubjectTable(subjectTableBody, subjectTableArray) {
         subjectTableBody.removeChild(subjectTableBody.lastElementChild);
     }
 
-
+    /*
+    * Checks if subjectTableArray at index 0 is the placeholder or not.
+    * If yes, then it creates the place-holder
+    * Else it loops through the array and puts the subjects in the table.
+    */
     if(!subjects.includes(subjectTableArray[0])) {
         const row = document.createElement("tr");
         const cell = document.createElement("td");
         row.setAttribute("place-holder", "true");
         cell.colSpan = 1;
-        cell.innerText = "Húzd ide a tárgyat";
+        cell.innerText = subjectTableArray[0];
         cell.style.textAlign = "center";
-        cell.style.color = "#888";
+        cell.style.color = "hsl(0, 0%, 50%)";
         row.appendChild(cell);
         subjectTableBody.appendChild(row);
     } else {
@@ -110,11 +114,14 @@ function loadSubjectTable(subjectTableBody, subjectTableArray) {
     }
 }
 
+// Loads the selected timetable from the localstorage. 
 function loadTimeTable(timeTableBody, timeTableArray) {
+    // Deletes the current rows from the table
     while(timeTableBody.firstElementChild) {
         timeTableBody.removeChild(timeTableBody.lastElementChild);
     }
 
+    // Adds the table rows and columns to match the 2D array we got from the localstorage.
     for(let i = 0; i < timeTableArray.length; i++) {
         const row = document.createElement("tr");
         for(let j = 0; j < timeTableArray[i].length; j++) {
@@ -131,8 +138,8 @@ function loadTimeTable(timeTableBody, timeTableArray) {
     }
 }
 
+// If there are no more subjects in the subject table, then this adds a placeholder to ensure we can sill put the subjects back.
 function addSubjectTablePlaceholder(subjectTableBody) {
-    console.log(subjectTableBody);
     if (subjectTableBody.children.length === 0) {
         const row = document.createElement("tr");
         const cell = document.createElement("td");
@@ -140,19 +147,22 @@ function addSubjectTablePlaceholder(subjectTableBody) {
         cell.colSpan = 1;
         cell.innerText = "Húzd ide a tárgyat";
         cell.style.textAlign = "center";
-        cell.style.color = "#888";
+        cell.style.color = "hsl(0, 0%, 50%)";
         row.appendChild(cell);
         subjectTableBody.appendChild(row);
     }
 }
 
+// Makes sure that the placeholder only appears when the subject table has not subjects.
 function removeSubjectTablePlaceholder(subjectTableBody) {
+    // If there is two children of the subject table and one of them is the placholder, it deletes the placeholder.
     if(subjectTableBody.children.length == 2 && subjectTableBody.firstElementChild.hasAttribute("place-holder"))
         subjectTableBody.removeChild(subjectTableBody.firstElementChild);
 }
 
+// Would create notification boxes, we would use to replace window alerts.
 function showNotification() {
-
+    // TODO
 }
 
 export {

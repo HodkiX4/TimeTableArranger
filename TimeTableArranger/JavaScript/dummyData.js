@@ -1,3 +1,5 @@
+// Constants tha we will load dynamically
+
 export const subjects = [
     "Alkalmazásfejlesztés II.",
     "Mesterséges Inteligencia I.",

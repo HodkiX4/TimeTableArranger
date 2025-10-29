@@ -1,3 +1,11 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
 :root {
     --primary-color: hsl(215, 60%, 50%);
     --secondary-color: hsl(170, 10%, 15%);
@@ -22,12 +30,6 @@
     --radius-lg: 1em;
     --radius-xl: 1.25em;
 }
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
 
 .container {
     padding: var(--spacing-xl);
@@ -38,23 +40,27 @@
 header {
     text-align: center;
     margin-bottom: var(--spacing-lg);
-}
-
-h1 {
-    color: var(--primary-color);
+    
+    h1 {
+        color: var(--primary-color);
+    }
 }
 
 main {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: span span;
+    grid-template-areas:
+        "actions timetable"
+        "subjects timetable";
     gap: var(--spacing-lg);
+    align-items: start;
+
 }
 
+/* Shared table css */
 table {
-    table-layout: fixed;
     border-collapse: collapse;
-    background-color: white;
     box-shadow: 0 2px 6px var(--gray-100);
     border-radius: var(--radius-md);
     overflow: hidden;
@@ -87,27 +93,29 @@ td {
     &:hover {
         background-color: var(--gray-900);
     }
+
 }
 
+#actions {
+    grid-area: actions;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    min-width: 320px;
+}
 
 #subjects-table {
-    align-self: flex-start;
-    width: 250px;
-    table-layout: fixed;
+    grid-area: subjects;
+    width: 50%;
+    min-width: 280px;
 }
 
 
 #time-table {
+    grid-area: timetable;
     flex-grow: 1;
     align-self: flex-start;
-    min-width: 600px;
-}
-
-.table-actions {
-    border-radius: var(--radius-md);
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-lg);
+    min-width: 800px;
 }
 
 #save-form, #get-form {
@@ -116,12 +124,14 @@ td {
     overflow: hidden;
     border-radius: var(--radius-sm);
     input, select {
+        padding: var(--spacing-md);
         flex-basis: 80%;
         outline: none;
         border: none;
         font-size: 1.4em;
     }
     button {
+        font-size: 1.2rem;
         flex-basis: 20%;
         cursor: pointer;
         font-weight: bolder;
@@ -142,14 +152,36 @@ td {
     font-size: 1.2rem;
     
 }
-@media only screen and (max-width: 600px) {
-    main {
-        flex-direction: column;
-        flex-wrap: wrap;
-        align-items: center;
+
+@media only screen and (max-width: 1200px) {
+    .container {
+        padding: var(--spacing-sm);
     }
 
-    .table-actions {
-        align-self: flex-start;
+    header {
+        h1 {
+            text-align: start;
+        }
+    }
+    main {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #time-table {
+        width: 100%;
+    }
+    #subjects-table {
+        width: 30%;
+    }
+
+    #save-form, #get-form {
+        input, select, button {
+            font-size: 1rem;
+        }
+    }
+
+    #delete-btn {
+        font-size: 1rem;
     }
 }

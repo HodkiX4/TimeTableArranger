@@ -1,20 +1,28 @@
-function saveTable(name, subjectTableArray, timeTableArray) {
-    const tables = JSON.parse(localStorage.getItem("tables")) || {};
+// Returns our tables object from the localstorage.
+const getTables = () => JSON.parse(localStorage.getItem("tables")) || {}
 
+
+// Saves a new table to the localstorage.
+function saveTable(name, subjectTableArray, timeTableArray) {
+    const tables = getTables();
+
+    // Adds the arrays to the tables object with the key "name".
     tables[name] = { subjectTableArray, timeTableArray };   
     
+    // Saves the updated tables to the localstorage.
     localStorage.setItem("tables", JSON.stringify(tables));
 }
 
-function getTables() {
-    const tables = JSON.parse(localStorage.getItem("tables")) || {};
-    
-    return tables;
-}
+
 function loadTable(name) {
-    const tables = JSON.parse(localStorage.getItem("tables"));
+    const tables = getTables();
+
+
     let tableName = null;
+    // The array we user for storing the two table arrays.
     let tableArrays = [];
+
+    // Iterates through the object entries and tries to fined the one with the given name.
     for(let [key, value] of Object.entries(tables)) {
         if(key === name) {
             tableName = name;
@@ -22,28 +30,29 @@ function loadTable(name) {
             break;
         }
     }
+
+    // If table is null by this point, it means it's not stored.
     if(!tableName) {
-        console.error("No such table");
         return;
     }
+
+    // Returns the data of our timetable.
     return { tableName, tableArrays }
 }
 
-function deletTable(name) {
-    const tables = JSON.parse(localStorage.getItem("tables"));
+// Deletes a table from the localstorage.
+function deleteTable(name) {
+    const tables = getTables();
+    // If the table with the given name exists, then we delete it and save the updated tables object to the localstorage.
     if(tables[name]) {
         delete tables[name];
         localStorage.setItem("tables", JSON.stringify(tables));
-        console.log("Table deleted");
-    } else {
-        console.warn("No table to delete");
     }
-
 }
 
 export {
     getTables,
     saveTable,
     loadTable,
-    deletTable
+    deleteTable
 }
